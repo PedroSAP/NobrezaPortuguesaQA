@@ -1,25 +1,35 @@
 from fastapi import FastAPI, Form
 from fastapi.responses import HTMLResponse
-from llama_index import StorageContext, load_index_from_storage
-from llama_index.llms import HuggingFaceLLM
+from llama_index.core import StorageContext, load_index_from_storage
+from llama_index.llms.huggingface import HuggingFaceLLM
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+from llama_index.core.settings import Settings
 import uvicorn
 
+# Define modelo de embeddings local
+Settings.embed_model = HuggingFaceEmbedding(model_name="intfloat/multilingual-e5-base")
+
+# Define LLM local
 llm = HuggingFaceLLM(model_name="tiiuae/falcon-7b-instruct")
+
+# Inicializa FastAPI
 app = FastAPI()
 
+# Carrega índice com embeddings locais
 storage_context = StorageContext.from_defaults(persist_dir="storage")
 index = load_index_from_storage(storage_context)
 query_engine = index.as_query_engine(llm=llm)
 
+# HTML
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html>
 <head>
     <title>Nobreza Portuguesa QA</title>
     <style>
-        body { font-family: Arial; margin: 2em; }
-        input[type=text] { padding: 0.5em; width: 70%; }
-        input[type=submit] { padding: 0.5em 1em; }
-        h1, h2 { color: #004080; }
+        body {{ font-family: Arial; margin: 2em; }}
+        input[type=text] {{ padding: 0.5em; width: 70%; }}
+        input[type=submit] {{ padding: 0.5em 1em; }}
+        h1, h2 {{ color: #004080; }}
     </style>
 </head>
 <body>
