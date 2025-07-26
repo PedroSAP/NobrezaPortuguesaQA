@@ -1,6 +1,11 @@
 fastapi
 uvicorn
 llama-index
+llama-index.core
+llama-index.llm.huggingface
+llama-index.embeddings.huggingface
+llama-index.core.settings
+llama-index.readers.wikipedia
 wikipedia
 transformers
 sentence-transformers
